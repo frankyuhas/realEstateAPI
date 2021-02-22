@@ -1,0 +1,326 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="houseStyles.css">
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+    
+    <!--<script>
+
+        window.onload = function () {
+            var request = new XMLHttpRequest();
+            request.open("GET", "https://localhost:44388/WebAPI/Service/House/GetAllHouses", true);
+
+            request.onreadystatechange = function () {
+                if (request.readyState == 4 && request.status == 200) {
+                    document.getElementById("MainPage").innerHTML = request.responseText;
+                }
+            };
+
+
+            request.send();
+
+        };
+    </script>-->
+    <title></title>
+</head>
+<body>
+
+    <div id="buttons">
+        <button id="btnGetAllHouses">Get All Houses</button>
+        <br />
+        <br />
+        <input id="txtHouseID" type="text" />
+        <button id="btnGetHouseByID">Find House</button>
+        <br />
+        <br />
+        <input id="txtZipCode" type="text" />
+        <button id="btnGetHousesByZip">Find Houses by Zipcode</button>
+        <br />
+        <br />
+        <select id="drpCriteria">
+            <option value="Price">Max Price</option>
+            <option value="SquareFootage">Total Square Footage</option>
+            <option value="Bedrooms"># of Bedrooms</option>
+            <option value="Bathrooms"># of Bathrooms</option>
+        </select>
+        <input id="txtNum" type="number" />
+        <button id="btnGetHousesByCriteria">Find Houses by Criteria</button>
+        <br />
+        <br />
+        <select id="drpCategory">
+            <option value="Single">Single Family</option>
+            <option value="Condo">Condo</option>
+            <option value="Townhouse">Townhouse</option>
+            <option value="Rental">Rental</option>
+        </select>
+        <button id="btnGetHousesByCategory">Find Houses by Category</button>
+        <br />
+        <br />
+        <button id="btnAddHouse">Add House</button>
+
+    </div>
+
+    <br />
+    <br />
+
+
+    <div id="addHouse">
+        <table>
+            <tr>
+                <td>Enter Address: </td>
+                <td><input id="txtAddress" type="text" /></td>
+            </tr>
+            <tr>
+                <td>Enter Status: </td>
+                <td><input id="txtStatus" type="text" /></td>
+            </tr>
+            <tr>
+                <td>Enter Category: </td>
+                <td>
+                    <select id="drpCategory">
+                        <option value="Single">Single Family</option>
+                        <option value="Condo">Condo</option>
+                        <option value="Townhouse">Townhouse</option>
+                        <option value="Rental">Rental</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Enter Price: </td>
+                <td><input id="txtPrice" type="number" /></td>
+            </tr>
+            <tr>
+                <td>Enter SqFt: </td>
+                <td><input id="txtSquareFootage" type="number" /></td>
+            </tr>
+            <tr>
+                <td>Enter Bedrooms: </td>
+                <td><input id="txtBedrooms" type="number" /></td>
+            </tr>
+            <tr>
+                <td>Enter Bathrooms: </td>
+                <td><input id="txtBathrooms" type="number" /></td>
+            </tr>
+            <tr>
+                <td>Enter Year Built: </td>
+                <td><input id="txtYearBuilt" type="number" /></td>
+            </tr>
+            <tr>
+                <td>Enter Description: </td>
+                <td><input id="txtDesc" type="text" /></td>
+            </tr>
+            <tr>
+                <td>Enter ZipCode: </td>
+                <td><input id="txtZipCode" type="number" /></td>
+            </tr>
+
+        </table>
+        <button id="btnSaveHouse">Save House</button>
+
+
+
+    </div>
+
+    <br />
+
+    <div id="MainPage">
+
+    </div>
+
+
+
+    <script>
+        $(document).ready(function () {
+            $("#addHouse").hide();
+
+            $("#btnAddHouse").click(function () {
+                $("#addHouse").show();
+            });
+
+
+            $("#btnSaveHouse").click(function () {
+                var strURL = "https://localhost:44388/WebAPI/Service/House/SaveHouse";
+
+                var house = new Object();
+                house.Address = $("#txtAddress").val();
+                house.Status = $("#txtStatus").val();
+                house.Category = $("#drpCategory").val();
+                house.Price = $("#txtPrice").val();
+                house.SquareFootage = $("#txtSquareFootage").val();
+                house.Bedrooms = $("#txtBedrooms").val();
+                house.Bathrooms = $("#txtBathrooms").val();
+                house.YearBuilt = $("#txtYearBuilt").val();
+                house.Description = $("#txtDesc").val();
+                house.ZipCode = $("#txtZipCode").val();
+
+                
+
+                var data = JSON.stringify(input);
+
+                $.ajax({
+                    type: "POST",
+                    url: strURL,
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: data,
+
+                    success: function (data) {
+                        var result = data;
+
+                        if (result == true)
+                            $("#MainPage").text("Success");
+                        else
+                            $("#MainPage").text("Failed");
+                    },
+                    error: function (req, status, error) {
+                        alert("Error: " + req.responseText + " | " + status + " | " + error);
+                    }
+
+                });
+            })
+
+            $("#btnGetAllHouses").click(function () {
+
+                console.log("GotHere");
+                var strURL = "https://localhost:44388/WebAPI/Service/House/GetAllHouses";
+
+                $("#MainPage").html("");
+
+
+                $.ajax({
+                    type: "GET",
+                    url: strURL,
+                    contentType: "application/json: charset=utf-8",
+                    dataType: "json",
+
+                    success: function (data) {
+                        var houses = data;
+                        $.each(houses, function (index, house) {
+                            $("#MainPage").append("<p>".concat("HouseID: " + house.HouseID + "<br/>Address: " + house.Address + "<br/>ZipCode: " + house.ZipCode + "<br/>Status: " + house.Status + "<br/>Category: " + house.Category + "<br/>Price: " + house.Price + "<br/>SqFt: " + house.SquareFootage + "<br/>Bedrooms: " + house.Bedrooms + "<br/>Bathrooms: " + house.Bathrooms + "</p>"));
+                        });
+                    },
+                    error: function (req, status, error) {
+                        alert("Error: " + req.responseText + " | " + status + " | " + error);
+                    }
+                });
+                console.log("got here 2");
+            });
+
+
+            $("#btnGetHouseByID").click(function () {
+                var strURL = "https://localhost:44388/WebAPI/Service/House/GetHouseByID/";
+                var param = $("#txtHouseID").val();
+
+
+                $("#MainPage").html("");
+
+
+                $.ajax({
+                    type: "GET",
+                    url: strURL + param,
+                    contentType: "application/json: charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        var house = data;
+                        $("#MainPage").html("<br><br>" +
+                            "HouseID: " + house.HouseID + ", Address: " + house.Address);
+                    },
+                    error: function (req, status, error) {
+                        alert("Error: " + req.responseText + " | " + status + " | " + error);
+                    }
+                });
+
+            });
+
+            $("#btnGetHousesByZip").click(function () {
+                var strURL = "https://localhost:44388/WebAPI/Service/House/GetHousesByZip/";
+                var param = $("#txtZipCode").val();
+
+
+                $("#MainPage").html("");
+
+
+                $.ajax({
+                    type: "GET",
+                    url: strURL + param,
+                    contentType: "application/json: charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        var houses = data;
+                        $.each(houses, function (index, house) {
+                            $("#MainPage").append("<p>".concat("HouseID: " + house.HouseID + "<br>Address: " + house.Address + house.ZipCode + "<br/>Status: " + house.Status + "<br/>Category: " + house.Category + "<br/>Price: " + house.Price + "<br/>SqFt: " + house.SquareFootage + "<br/>Bedrooms: " + house.Bedrooms + "<br/>Bathrooms: " + house.Bathrooms + "</p>"));
+                        });
+                    },
+                    error: function (req, status, error) {
+                        alert("Error: " + req.responseText + " | " + status + " | " + error);
+                    }
+                });
+
+            });
+
+
+            $("#btnGetHousesByCriteria").click(function () {
+
+                console.log("GotHere");
+                var strURL = "https://localhost:44388/WebAPI/Service/House/GetHousesByCriteria/";
+                var criteria = $("#drpCriteria").val();
+                var num = $("#txtNum").val();
+                $("#MainPage").html("");
+
+
+                $.ajax({
+                    type: "GET",
+                    url: strURL + criteria + "/" + num,
+                    contentType: "application/json: charset=utf-8",
+                    dataType: "json",
+
+                    success: function (data) {
+                        var houses = data;
+                        $.each(houses, function (index, house) {
+                            $("#MainPage").append("<p>".concat("HouseID: " + house.HouseID + "<br/>Address: " + house.Address + house.ZipCode + "<br/>Status: " + house.Status + "<br/>Category: " + house.Category + "<br/>Price: " + house.Price + "<br/>SqFt: " + house.SquareFootage + "<br/>Bedrooms: " + house.Bedrooms + "<br/>Bathrooms: " + house.Bathrooms + "</p>"));
+                        });
+                    },
+                    error: function (req, status, error) {
+                        alert("Error: " + req.responseText + " | " + status + " | " + error);
+                    }
+                });
+                console.log("got here 2");
+            });
+
+            $("#btnGetHousesByCategory").click(function () {
+
+                console.log("GotHere");
+                var strURL = "https://localhost:44388/WebAPI/Service/House/GetHousesByCategory/";
+                var param = $("#drpCategory").val();
+
+                $("#MainPage").html("");
+
+
+                $.ajax({
+                    type: "GET",
+                    url: strURL + param,
+                    contentType: "application/json: charset=utf-8",
+                    dataType: "json",
+
+                    success: function (data) {
+                        var houses = data;
+                        $.each(houses, function (index, house) {
+                            $("#MainPage").append("<p>".concat("HouseID: " + house.HouseID + "<br/>Address: " + house.Address + house.ZipCode + "<br/>Status: " + house.Status + "<br/>Category: " + house.Category + "<br/>Price: " + house.Price + "<br/>SqFt: " + house.SquareFootage + "<br/>Bedrooms: " + house.Bedrooms + "<br/>Bathrooms: " + house.Bathrooms + "</p>"));
+                        });
+                    },
+                    error: function (req, status, error) {
+                        alert("Error: " + req.responseText + " | " + status + " | " + error);
+                    }
+                });
+                console.log("got here 2");
+            });
+
+
+        });
+
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+﻿body {
+    background-color: lightgray;
+}
+
+#MainPage {
+    margin: auto;
+    display: block;
+    overflow:hidden; 
+    padding: 10px;
+    background-color: darkslategray;
+    border-radius: 5px;
+    color: white;
+}
+
+
+#Header {
+    margin: auto;
+    display: block;
+    height: 250px;
+    width: 1200px;
+    padding: 10px;
+    background-color: lightslategray;
+    border-radius: 5px;
+}
+
+#addHouse {
+    margin: auto;
+    display: block;
+    overflow: hidden;
+    padding: 10px;
+    background-color: darkslategray;
+    border-radius: 5px;
+    color: white;
+}
+
+#Title{
+    text-align:center;
+    font-size: 75pt;
+    font-family: Impact;
+    font-stretch: expanded;
+    color: lightgray;
+}
